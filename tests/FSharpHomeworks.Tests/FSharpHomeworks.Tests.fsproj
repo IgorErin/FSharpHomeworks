@@ -6,12 +6,7 @@
         <GenerateProgramFile>false</GenerateProgramFile>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="AssemblyInfo.fs" />
-        <Compile Include="Tests.fs" />
         <Compile Include="Main.fs" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="../../src/FSharpHomeworks/FSharpHomeworks.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
