@@ -3,16 +3,20 @@ name: Build master
 on: [push, pull_request]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ windows-latest ]
-    runs-on: ${{ matrix.os }}
+    win-build:
+        name: Windows Build
+        runs-on: windows-latest
+        defaults:
+            run:
+                shell: cmd
+        steps:
+            - name: System Info
+              run: systeminfo
 
-    steps:
-    # Not specifying a version will attempt to install via global.json
-    - name: Use .NET Core global.json
-      uses: actions/setup-dotnet@v1
+            - uses: actions/checkout@v2
 
-    - name: Build
-      run: ./build.cmd
+            - name: Setup .NET Core
+              uses: actions/setup-dotnet@v1
+
+            - name: Build
+              run: ./build.cmd
