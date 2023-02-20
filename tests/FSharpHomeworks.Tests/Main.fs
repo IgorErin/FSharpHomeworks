@@ -1,9 +1,5 @@
-namespace FSharpHomeworks.Tests
+open Expecto
 
-module ExpectoTemplate =
-
-    open Expecto
-
-    [<EntryPoint>]
-    let main argv =
-        Tests.runTestsInAssembly defaultConfig argv
+[<EntryPoint>]
+let main argv =
+    Tests.runTestsInAssembly defaultConfig argv
