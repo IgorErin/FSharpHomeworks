@@ -1,0 +1,24 @@
+name: Build master
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    # Not specifying a version will attempt to install via global.json
+    - name: Use .NET Core global.json
+      uses: actions/setup-dotnet@v1
+
+    - name: Build
+      if: runner.os != 'Windows'
+      run: |
+        chmod +x ./build.sh
+        ./build.sh
+    - name: Build
+      if: runner.os == 'Windows'
+      run: ./build.cmd
