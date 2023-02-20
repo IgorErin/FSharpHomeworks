@@ -10,5 +10,5 @@ module List =
     let revers =
         function
         | [] -> []
-        | [ _ ] as list -> list
-        | fst :: snd :: tail -> revAcc tail [ snd ; fst ]
+        | [_] as list -> list
+        | fst :: snd :: tail -> revAcc tail [snd ; fst]
