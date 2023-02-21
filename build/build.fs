@@ -151,10 +151,12 @@ let dotnetRestore _ =
 let dotnetBuild ctx =
     DotNet.build(fun c ->
         { c with
-            Configuration = configuration (ctx.Context.AllExecutingTargets)
+            Configuration = configuration ctx.Context.AllExecutingTargets
             Common =
                 c.Common
                 |> DotNet.Options.withAdditionalArgs [ "--no-restore" ]
+            MSBuildParams =
+                { c.MSBuildParams with DisableInternalBinLog = true }
         }) sln
 
 let dotnetTest ctx =
@@ -164,6 +166,8 @@ let dotnetTest ctx =
             Common =
                 c.Common
                 |> DotNet.Options.withAdditionalArgs [ "--no-build" ]
+            MSBuildParams =
+                { c.MSBuildParams with DisableInternalBinLog = true } // TODO()
             }) sln
 
 let formatCode _ =

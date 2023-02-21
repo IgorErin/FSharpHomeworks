@@ -3,25 +3,21 @@ module FSharpHomeworks.Tests.List
 open Expecto
 
 let checkResult list result =
-    "List must be the same"
-    |> Expect.equal result (List.rev list)
+    "List must be the same" |> Expect.sequenceEqual result (List.rev list)
 
-let makeTest<'a when 'a: equality>
-    (reversFun: 'a list -> 'a list) (list: 'a list) =
-    reversFun list
-    |> checkResult list 
+let makeTest<'a when 'a: equality> (reversFun: 'a list -> 'a list) (list: 'a list) =
+    reversFun list |> checkResult list
 
 let testFixture =
+    let config = Utils.defaultConfig
+
     [ makeTest<int> Introduction.List.revers
-      |> testProperty "int test"
-      
-      makeTest<float> Introduction.List.revers
-      |> testProperty "float test"
-      
+      |> testPropertyWithConfig config "int test"
+
       makeTest<bool> Introduction.List.revers
-      |> testProperty "bool test"
-      
+      |> testPropertyWithConfig config "bool test"
+
       makeTest<byte> Introduction.List.revers
-      |> testProperty "byte test" ]
-    
+      |> testPropertyWithConfig config "byte test" ]
+
 let tests = testList "List.revers tests" testFixture

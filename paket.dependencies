@@ -6,6 +6,8 @@ nuget Packaging.Targets 0.1.208
 
 nuget Expecto
 nuget Expecto.FsCheck
+nuget Microsoft.NET.Test.Sdk
+nuget YoloDev.Expecto.TestSdk
 // [ FAKE GROUP ]
 group Build
     storage: none

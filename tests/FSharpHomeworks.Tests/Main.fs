@@ -1,9 +1,9 @@
 open Expecto
 open FSharpHomeworks.Tests
 
-let tests =
-    testList "All tests"
-        [ List.tests ]
+[<Tests>]
+let tests = testList "All tests" [ List.tests ]
 
 [<EntryPoint>]
-let main argv = runTestsWithCLIArgs [] argv tests
+let main argv =
+    runTestsWithCLIArgs [] argv tests

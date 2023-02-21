@@ -6,6 +6,7 @@
         <GenerateProgramFile>false</GenerateProgramFile>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Helpers.fs" />
         <Compile Include="List\Revers.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
