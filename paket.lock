@@ -7,6 +7,11 @@ NUGET
     Expecto (9.0.4)
       FSharp.Core (>= 4.6) - restriction: || (>= net461) (>= netstandard2.0)
       Mono.Cecil (>= 0.11.3) - restriction: || (>= net461) (>= netstandard2.0)
+    Expecto.FsCheck (9.0.4)
+      Expecto (>= 9.0.4) - restriction: || (>= net461) (>= netstandard2.0)
+      FsCheck (>= 2.14.3) - restriction: || (>= net461) (>= netstandard2.0)
+    FsCheck (2.16.5) - restriction: || (>= net461) (>= netstandard2.0)
+      FSharp.Core (>= 4.2.3) - restriction: || (>= net452) (>= netstandard1.6)
     FSharp.Core (7.0.200) - restriction: || (>= net461) (>= netstandard2.0)
     Microsoft.NETCore.Platforms (7.0) - restriction: || (&& (>= net461) (>= netcoreapp2.0)) (&& (>= net461) (>= netcoreapp2.1)) (&& (>= net462) (>= netcoreapp2.0)) (&& (>= net462) (>= netcoreapp2.1)) (&& (>= netcoreapp2.0) (< netcoreapp2.1)) (&& (>= netcoreapp2.1) (< netcoreapp3.0))
     Microsoft.Win32.SystemEvents (7.0) - restriction: >= net6.0

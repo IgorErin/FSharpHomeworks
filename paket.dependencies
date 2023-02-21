@@ -5,6 +5,7 @@ nuget Argu 6.1.1
 nuget Packaging.Targets 0.1.208
 
 nuget Expecto
+nuget Expecto.FsCheck
 // [ FAKE GROUP ]
 group Build
     storage: none
