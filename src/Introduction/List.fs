@@ -1,13 +1,19 @@
 namespace Introduction
 
+/// <summary>
+/// List module.
+/// </summary>
 [<RequireQualifiedAccess>]
 module List =
-    let rec private revAcc list acc =
+    let rec private revRec list acc =
         match list with
-        | head :: tail -> revAcc tail (head :: acc)
+        | head :: tail -> revRec tail (head :: acc)
         | [] -> acc
 
+    /// <summary>
+    /// Reverse list.
+    /// </summary>
     let revers =
         function
         | [] -> []
-        | list -> revAcc list []
+        | list -> revRec list []
