@@ -1,9 +1,12 @@
-namespace FSharpHomeworks.Tests
+open Expecto
+open FSharpHomeworks.Tests
 
-module ExpectoTemplate =
+/// <summary>
+/// All tests.
+/// </summary>
+[<Tests>]
+let tests = testList "All tests" [ List.Find.tests ]
 
-    open Expecto
-
-    [<EntryPoint>]
-    let main argv =
-        Tests.runTestsInAssembly defaultConfig argv
+[<EntryPoint>]
+let main argv =
+    runTestsWithCLIArgs [] argv tests
