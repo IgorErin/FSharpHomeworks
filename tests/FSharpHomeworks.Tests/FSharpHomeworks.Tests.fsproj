@@ -6,7 +6,12 @@
         <GenerateProgramFile>false</GenerateProgramFile>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Helpers.fs" />
+        <Compile Include="List\Revers.fs" />
         <Compile Include="Main.fs" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Introduction\Introduction.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
