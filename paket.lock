@@ -1,15 +1,19 @@
 STORAGE: NONE
 NUGET
   remote: https://www.nuget.org/api/v2
-    altcover (8.2.837)
     Argu (6.1.1)
       FSharp.Core (>= 4.3.2) - restriction: >= netstandard2.0
       System.Configuration.ConfigurationManager (>= 4.4) - restriction: >= netstandard2.0
     Expecto (9.0.4)
       FSharp.Core (>= 4.6) - restriction: || (>= net461) (>= netstandard2.0)
       Mono.Cecil (>= 0.11.3) - restriction: || (>= net461) (>= netstandard2.0)
-    FSharp.Core (6.0)
-    Microsoft.CodeCoverage (17.5.0-preview-20221221-03) - restriction: || (>= net45) (>= netcoreapp1.0)
+    Expecto.FsCheck (9.0.4)
+      Expecto (>= 9.0.4) - restriction: || (>= net461) (>= netstandard2.0)
+      FsCheck (>= 2.14.3) - restriction: || (>= net461) (>= netstandard2.0)
+    FsCheck (2.16.5) - restriction: || (>= net461) (>= netstandard2.0)
+      FSharp.Core (>= 4.2.3) - restriction: || (>= net452) (>= netstandard1.6)
+    FSharp.Core (7.0.200) - restriction: || (>= net461) (>= netstandard2.0)
+    Microsoft.CodeCoverage (17.5) - restriction: || (>= net45) (>= netcoreapp1.0)
     Microsoft.CSharp (4.7) - restriction: || (&& (< netstandard1.3) (>= uap10.0)) (&& (< netstandard2.0) (>= uap10.0))
     Microsoft.NET.Test.Sdk (17.1.0-preview-20211109-03)
       Microsoft.CodeCoverage (>= 17.1.0-preview-20211109-03) - restriction: || (>= net45) (>= netcoreapp1.0)
@@ -20,11 +24,11 @@ NUGET
       System.Runtime.InteropServices.RuntimeInformation (>= 4.0) - restriction: >= uap10.0
     Microsoft.NETCore.Platforms (7.0) - restriction: || (&& (>= net46) (< netstandard1.4) (>= uap10.0)) (&& (>= net461) (>= netcoreapp2.0)) (&& (>= net461) (>= netcoreapp2.1)) (&& (>= net461) (< netstandard2.0) (>= uap10.0)) (&& (>= net462) (>= netcoreapp2.0)) (&& (>= net462) (>= netcoreapp2.1)) (&& (>= netcoreapp2.0) (< netcoreapp2.1)) (&& (>= netcoreapp2.0) (< netstandard2.0) (>= uap10.0)) (&& (>= netcoreapp2.1) (< netcoreapp3.0)) (&& (< netstandard1.0) (>= uap10.0)) (&& (< netstandard1.2) (>= uap10.0) (< win8)) (&& (< netstandard1.3) (>= uap10.0)) (&& (< netstandard1.4) (>= uap10.0) (< win8) (< wpa81)) (&& (>= netstandard1.5) (< netstandard1.6) (>= uap10.0) (< win8) (< wpa81)) (&& (< netstandard1.5) (>= uap10.0)) (&& (>= netstandard1.6) (< netstandard2.0) (>= uap10.0) (< win8) (< wpa81)) (&& (< portable-net45+win8+wpa81) (>= uap10.0)) (&& (>= uap10.0) (>= wp8)) (>= uap10.1)
     Microsoft.NETCore.Targets (5.0) - restriction: || (&& (>= net46) (< netstandard1.4) (>= uap10.0)) (&& (< netstandard1.3) (>= uap10.0)) (&& (< netstandard1.4) (>= uap10.0) (< win8) (< wpa81)) (&& (>= netstandard1.5) (< netstandard1.6) (>= uap10.0) (< win8) (< wpa81)) (&& (< netstandard1.5) (>= uap10.0) (< uap10.1)) (&& (< netstandard1.5) (>= uap10.0) (< win8) (< wpa81)) (&& (>= netstandard1.6) (< netstandard2.0) (>= uap10.0) (< win8) (< wpa81))
-    Microsoft.TestPlatform.ObjectModel (17.5.0-preview-20221221-03) - restriction: >= netcoreapp3.1
+    Microsoft.TestPlatform.ObjectModel (17.5) - restriction: >= netcoreapp3.1
       NuGet.Frameworks (>= 5.11) - restriction: || (>= net462) (>= netstandard2.0)
       System.Reflection.Metadata (>= 1.6) - restriction: || (>= net462) (>= netstandard2.0)
-    Microsoft.TestPlatform.TestHost (17.5.0-preview-20221221-03) - restriction: >= netcoreapp1.0
-      Microsoft.TestPlatform.ObjectModel (>= 17.5.0-preview-20221221-03) - restriction: >= netcoreapp3.1
+    Microsoft.TestPlatform.TestHost (17.5) - restriction: >= netcoreapp1.0
+      Microsoft.TestPlatform.ObjectModel (>= 17.5) - restriction: >= netcoreapp3.1
       Newtonsoft.Json (>= 13.0.1) - restriction: >= netcoreapp3.1
     Microsoft.Win32.Primitives (4.3) - restriction: || (&& (>= net46) (< netstandard1.4) (>= uap10.0)) (&& (< netstandard1.3) (>= uap10.0)) (&& (< netstandard1.4) (>= uap10.0) (< win8) (< wpa81)) (&& (>= netstandard1.5) (< netstandard1.6) (>= uap10.0) (< win8) (< wpa81)) (&& (< netstandard1.5) (>= uap10.0) (< uap10.1)) (&& (< netstandard1.5) (>= uap10.0) (< win8) (< wpa81)) (&& (>= netstandard1.6) (< netstandard2.0) (>= uap10.0) (< win8) (< wpa81))
       Microsoft.NETCore.Platforms (>= 1.1) - restriction: && (< monoandroid) (< monotouch) (< net46) (>= netstandard1.3) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)
