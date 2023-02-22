@@ -1,43 +1,39 @@
 namespace Introduction
 
-type Either<'a> = Left of string | Right of 'a 
+type Either<'a> =
+    | Left of string
+    | Right of 'a
 
 [<RequireQualifiedAccess>]
 module Degrees =
-    let private intPow value count = 
-        let rec pow value count result =
+    let private degreeOf2 count =
+        let rec degreeOf2Rec count multiplier acc =
             if count > 0 then
-                pow value (count - 1) (result * value)
+                if count % 2 <> 0 then acc * multiplier else acc
+                |> degreeOf2Rec (count / 2) (multiplier * multiplier)
             else
-                result
-        
-        pow value count 1
-        
-    let private degree2 count =
-        let rec degreeOf2Rec n powCount result =
-            if n > 0 then 
-                if n % 2 <> 0 then result * (intPow 2 powCount) else result
-                |> degreeOf2Rec (n / 2) (powCount + 1)
-            else
-                result 
-            
-        degreeOf2Rec count 1 1
-        
-    let rec private seqOfMulBy2 itemInNDegree m =
+                acc
+
+        degreeOf2Rec count 2 1
+
+    let rec private seqOfMul prevItem m =
         seq {
             if m > 0 then
-                let newItem = itemInNDegree * 2
-                
+                let newItem = prevItem * 2
+
                 yield newItem
-                yield! seqOfMulBy2 newItem m - 1
+                yield! seqOfMul newItem <| m - 1
         }
-    
+
     let seqOf2 n m =
-        if n > 0 && m > 0 then
-            let firstItem = degree2 n
+        if n >= 0 && m >= 0 then
+            let firstItem = degreeOf2 n
+
             seq {
                 yield firstItem
-                yield! seqOfMulBy2 firstItem m 
+                yield! seqOfMul firstItem m
             }
+            |> Seq.toList
             |> Right
-        else Left <| "Invalid input data: n or m less than 0" 
+        else
+            Left <| "Invalid input data: n or m less than 0"
