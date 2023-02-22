@@ -1,5 +1,12 @@
 namespace Introduction
 
+/// <summary>
+/// Either type.
+/// </summary>
+/// <remarks>
+/// Left contain error message.
+/// Right contain result value.
+/// </remarks>
 type Either<'a> =
     | Left of string
     | Right of 'a
@@ -25,6 +32,13 @@ module Degrees =
                 yield! seqOfMul newItem <| m - 1
         }
 
+    /// <summary>
+    /// Gives a sequence of powers of two.
+    /// </summary>
+    /// <example>
+    /// For some n and m ...
+    /// result = [ 2^n; 2^(n + 1); 2^(m + 2); ... ; 2^(n + m) ]
+    /// </example>
     let seqOf2 n m =
         if n >= 0 && m >= 0 then
             let firstItem = degreeOf2 n

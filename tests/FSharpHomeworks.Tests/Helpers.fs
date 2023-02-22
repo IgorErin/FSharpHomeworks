@@ -3,7 +3,13 @@ namespace FSharpHomeworks.Tests
 open FsCheck
 open Expecto
 
+/// <summary>
+/// Generators for property based testing.
+/// </summary>
 module Generators =
+    /// <summary>
+    /// Type that generate test compatible lists.
+    /// </summary>
     type TestCompatibleList() =
         static let pairOfVectorsOfEqualSize (valuesGenerator: Gen<'a>) =
             gen {
@@ -43,11 +49,24 @@ module Generators =
         static member BoolType() =
             pairOfVectorsOfEqualSize <| Arb.generate<bool> |> Arb.fromGen
 
+/// <summary>
+/// Module with test common functionality.
+/// </summary>
 module Utils =
+    // TODO(type reference)
+    /// <summary>
+    /// Default test config.
+    /// </summary>
+    /// <remarks>
+    /// Without nan and Infinity for <see cref="System.Double"/>.
+    /// </remarks>
     let defaultConfig =
         { FsCheckConfig.defaultConfig with
             arbitrary = [ typeof<Generators.TestCompatibleList> ]
             maxTest = 10 }
 
+    /// <summary>
+    /// IsEqual for <see cref="System.Double"/>.
+    /// </summary>
     let floatIsEqual x y =
         abs (x - y) < Accuracy.medium.absolute || x.Equals y
