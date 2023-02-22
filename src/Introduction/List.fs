@@ -1,11 +1,12 @@
 namespace Introduction
 
 [<RequireQualifiedAccess>]
-module List =
-    let rec find<'a when 'a : equality> (item: 'a) list =
-        match list with
-        | head :: _ when head = item ->
-            Some item
-        | _ :: tail ->  find item tail
-        | [] -> None
-        
+module List = 
+    let tryFindIndex item list =
+       let rec tryFindIndexRec acc list item =    
+         match list with
+         | head :: _ when head = item -> Some acc
+         | _ :: tail -> tryFindIndexRec (acc + 1) tail item
+         | [] -> None
+         
+       tryFindIndexRec 0 list item    
