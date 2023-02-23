@@ -22,9 +22,14 @@ let factorial count =
 /// Check result.
 /// </summary>
 /// <param name="count">Factorial argument.</param>
-/// <param name="result">Actual factorial result.</param>
-let checkResult count result =
-    "Results must be the same" |> Expect.equal (factorial count) result
+let checkResult count =
+    function
+    | Left message ->
+        "The number must be less than zero" |> Expect.isTrue (count < 0)
+
+        "The lines must be the same"
+        |> Expect.equal "Invalid data: factorial is not defined for negative" message
+    | Right result -> "Results must be the same" |> Expect.equal (factorial count) result
 
 /// <summary>
 /// Make test.
