@@ -2,6 +2,7 @@ namespace FSharpHomeworks.Tests
 
 open FsCheck
 open Expecto
+open Introduction
 
 module Generators =
     type TestCompatibleList() =
@@ -42,6 +43,57 @@ module Generators =
 
         static member BoolType() =
             pairOfVectorsOfEqualSize <| Arb.generate<bool> |> Arb.fromGen
+
+    type TreeGenerator() =
+        static let nodeGenerator
+            (valuesGenerator: Gen<'a>)
+            (treeGenerator: Gen<Tree<'a>>)
+            =
+            gen {
+                let! value = valuesGenerator
+
+                let! leftNode = treeGenerator
+                let! rightNode = treeGenerator
+
+                return Node(leftNode, rightNode, value)
+            }
+
+        static let rec treeGenerator (valuesGenerator: Gen<'a>) =
+            gen {
+                let treeGenerator = treeGenerator valuesGenerator
+
+                return!
+                    Gen.oneof
+                        [ Gen.constant Nil; nodeGenerator valuesGenerator treeGenerator ]
+            }
+
+        static member IntType() =
+            treeGenerator <| Arb.generate<int> |> Arb.fromGen
+
+        static member FloatType() =
+            treeGenerator <| (Arb.Default.NormalFloat() |> Arb.toGen |> Gen.map float)
+            |> Arb.fromGen
+
+        static member SByteType() =
+            treeGenerator <| Arb.generate<sbyte> |> Arb.fromGen
+
+        static member ByteType() =
+            treeGenerator <| Arb.generate<byte> |> Arb.fromGen
+
+        static member Int16Type() =
+            treeGenerator <| Arb.generate<int16> |> Arb.fromGen
+
+        static member UInt16Type() =
+            treeGenerator <| Arb.generate<uint16> |> Arb.fromGen
+
+        static member Int32Type() =
+            treeGenerator <| Arb.generate<int32> |> Arb.fromGen
+
+        static member UInt32Type() =
+            treeGenerator <| Arb.generate<uint32> |> Arb.fromGen
+
+        static member BoolType() =
+            treeGenerator <| Arb.generate<bool> |> Arb.fromGen
 
 module Utils =
     let defaultConfig =
