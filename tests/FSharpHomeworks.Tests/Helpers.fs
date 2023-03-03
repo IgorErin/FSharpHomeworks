@@ -46,8 +46,7 @@ module Generators =
 module Utils =
     let defaultConfig =
         { FsCheckConfig.defaultConfig with
-            arbitrary = [ typeof<Generators.TestCompatibleList> ]
-            maxTest = 10 }
+            arbitrary = [ typeof<Generators.TestCompatibleList> ] }
 
     let floatIsEqual x y =
         abs (x - y) < Accuracy.medium.absolute || x.Equals y
