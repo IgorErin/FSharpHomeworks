@@ -5,6 +5,9 @@ open Expecto
 
 let config = Utils.defaultConfig
 
+/// <summary>
+/// Compare actual and expected results.
+/// </summary>
 let rec checkResult map sourceTree actualTree =
     match sourceTree, actualTree with
     | Node(leftSource, rightSource, valueSource),
@@ -18,9 +21,17 @@ let rec checkResult map sourceTree actualTree =
     | Nil, Nil -> ()
     | _, _ -> failwith "Different pattern"
 
+/// <summary>
+/// Make tests 
+/// </summary>
+/// <param name="map">Tree map function.</param>
+/// <param name="tree">Tree created by FSCheck.</param>
 let makeTest map tree =
     Tree.map map tree |> checkResult map tree
 
+/// <summary>
+/// Tests fixtures.
+/// </summary>
 let testFixtures =
     let intMap = fun item -> item + 1
 
