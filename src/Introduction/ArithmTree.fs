@@ -1,7 +1,7 @@
 namespace Introduction
 
 /// <summary>
-/// Binary operation identifier. 
+/// Binary operation identifier.
 /// </summary>
 type BinOp =
     | Add
