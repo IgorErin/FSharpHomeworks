@@ -8,15 +8,6 @@ type BinOp =
     | Sub
     | Mul
 
-    /// <summary>
-    /// Convert identifier to function.
-    /// </summary>
-    member this.ToFunction() =
-        match this with
-        | Add -> (+)
-        | Sub -> (-)
-        | Mul -> (*)
-
 /// <summary>
 /// Arithmetic tree.
 /// </summary>
@@ -27,12 +18,25 @@ type ArithmeticTree<'a> =
 /// <summary>
 /// Arithmetic tree module.
 /// </summary>
-module ArithmeticTree =
-    let rec eval =
-        function
-        | BinOp(left, op, right) ->
-            let leftResult = eval left
-            let rightResult = eval right
+module Arithmetic =
+    /// <summary>
+    /// Eval <see cref="Introduction.BinOp"/>.
+    /// </summary>
+    /// <param name="op">Operation to eval.</param>
+    let inline evalBinOp op =
+        match op with
+        | Add -> (+)
+        | Sub -> (-)
+        | Mul -> (*)
 
-            op.ToFunction () leftResult rightResult
+    /// <summary>
+    /// Eval tree.
+    /// </summary>
+    let rec evalTree tree =
+        match tree with
+        | BinOp(left, op, right) ->
+            let leftResult = evalTree left
+            let rightResult = evalTree right
+
+            evalBinOp op leftResult rightResult
         | Literal value -> value

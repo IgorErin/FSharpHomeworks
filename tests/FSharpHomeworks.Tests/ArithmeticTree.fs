@@ -27,11 +27,12 @@ let rec evalTree tree =
 /// <param name="isEqual">Is equal function.</param>
 /// <param name="tree">Tree to eval.</param>
 let inline checkResult isEqual tree =
-    let actualResult = ArithmeticTree.eval tree
+    let actualResult = Arithmetic.evalTree tree
     let expectedResult = evalTree tree
 
     "Results must be the same"
     |> Expect.isTrue (isEqual actualResult expectedResult)
 
 let test =
-    checkResult (=) |> testPropertyWithConfig config "Int arithmetic tree test"
+    checkResult ((=): int -> int -> bool)
+    |> testPropertyWithConfig config "Int arithmetic tree test"
