@@ -22,7 +22,7 @@ let rec checkResult map sourceTree actualTree =
     | _, _ -> failwith "Different pattern"
 
 /// <summary>
-/// Make tests 
+/// Make tests
 /// </summary>
 /// <param name="map">Tree map function.</param>
 /// <param name="tree">Tree created by FSCheck.</param>

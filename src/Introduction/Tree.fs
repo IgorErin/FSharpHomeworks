@@ -8,7 +8,7 @@ type Tree<'a> =
     | Nil
 
 /// <summary>
-/// Module for <see cref="Tree"/> processing. 
+/// Module for <see cref="Tree"/> processing.
 /// </summary>
 module Tree =
     let rec map mapFun =
