@@ -79,6 +79,7 @@ module Lambda =
             let substitute = substitute x N
 
             App(substitute leftTerm, substitute rightTerm)
+
     /// <summary>
     /// Reduce term by betta reduction.
     /// </summary>
