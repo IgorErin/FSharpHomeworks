@@ -46,13 +46,18 @@ module Lambda =
         getFreeVariables [] [] term
 
     /// <summary>
-    /// Substitute the term N instead of a variable named x
+    /// Substitute the term N instead of a variable named x.
     /// </summary>
     /// <param name="x">Variable name.</param>
     /// <param name="N">Term to substitute.</param>
     let rec substitute x N =
         function
+        // x[x := N] = N;
+        // y[x := N] = y;
         | Var name as var -> if name = x then N else var
+        //(\x.P)[x := N] = \x.P
+        //(\y.P)[x := N] = \y.P[x := N], if y in FV(N) or x in FV(P)
+        //(\y.P)[x := N] = \z.P[y := z][x := N], if y in FV(N) and x in FV(P)
         | Abs(y, P) as abs ->
             if y = x then
                 abs
@@ -69,11 +74,11 @@ module Lambda =
                     substitute y (Var z) P |> substitute x N |> (fun term -> Abs(z, term))
                 else
                     substitute x N P |> fun term -> Abs(y, term)
+        // (P Q)[x := N] = P[x := N] Q[x := N];
         | App(leftTerm, rightTerm) ->
             let substitute = substitute x N
 
             App(substitute leftTerm, substitute rightTerm)
-
     /// <summary>
     /// Reduce term by betta reduction.
     /// </summary>
