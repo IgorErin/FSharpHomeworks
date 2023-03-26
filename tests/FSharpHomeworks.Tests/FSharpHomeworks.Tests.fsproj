@@ -7,9 +7,11 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Helpers.fs" />
+        <Compile Include="Interpreter.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\..\src\Interpreter\Interpreter.fsproj" />
       <ProjectReference Include="..\..\src\Introduction\Introduction.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />

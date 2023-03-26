@@ -1,7 +1,8 @@
 open Expecto
+open FSharpHomeworks.Tests
 
 [<Tests>]
-let tests = testList "All tests" []
+let tests = testList "All tests" [ Interpreter.tests ]
 
 [<EntryPoint>]
 let main argv =
