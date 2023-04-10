@@ -1,6 +1,7 @@
 namespace Introduction.Net
 
 open Introduction
+open Expecto
 open FsCheck
 
 type OS =
@@ -9,18 +10,39 @@ type OS =
     | OsX
     
 type Id = string
-
-type Predicate =
-    | False
-    | True
-    | Random
-
+    
+type Predicate(probability: float) =
+    do
+        if probability < 0
+            || probability > 1 then
+                failwith "Probability must be in range"
+    
+    let floatIsEqual x y =
+        abs (x - y) < Accuracy.medium.absolute
+        || x.Equals y
+        
+    let trueGen = Gen.constant true
+    let falseGen = Gen.constant false
+    
+    let count = int <| probability * 100.0
+    
+    let frequency = [(count, trueGen); (100 - count, falseGen)]
+    
+    member this.Run () =
+        Gen.frequency frequency
+        |> Gen.sample 1 1
+        |> List.last 
+        
+    member this.IsZeroProbability = floatIsEqual probability 0.0
+    
 type INode =
     abstract IsIll: bool
     
     abstract Id: Id
     
-    abstract TryInfect: unit -> unit 
+    abstract TryInfect: unit -> unit
+    
+    abstract CanIll: bool
     
 type Node(isIll, predicate: Predicate, id: Id) =    
     let mutable isIll = isIll 
@@ -30,16 +52,10 @@ type Node(isIll, predicate: Predicate, id: Id) =
         
         member val Id = id with get
         
-        member this.TryInfect() =
-            if not isIll then
-                match predicate with
-                | True -> isIll <- true
-                | False -> isIll <- false
-                | Random ->
-                    let random = System.Random()
-                    
-                    isIll <- random.Next() % 2 = 0 
+        member val CanIll = predicate.IsZeroProbability
         
+        member this.TryInfect() = isIll <- predicate.Run()
+                
 type IInfectNet =
     abstract RunStep: unit -> unit
     
