@@ -1,26 +1,51 @@
 namespace Introduction.Net
 
 open Introduction
-
-type Predicate = unit -> bool 
+open FsCheck
 
 type OS =
     | Windows
     | Linux
     | OsX
     
-type Id = string 
+type Id = string
+
+type Predicate =
+    | False
+    | True
+    | Random
+
+type INode =
+    abstract IsIll: bool
+    
+    abstract Id: Id
+    
+    abstract TryInfect: unit -> unit 
     
 type Node(isIll, predicate: Predicate, id: Id) =    
-    let mutable isIll = isIll
+    let mutable isIll = isIll 
     
-    member this.IsIll with get() = isIll
+    interface INode with 
+        member this.IsIll with get() = isIll
+        
+        member val Id = id with get
+        
+        member this.TryInfect() =
+            if not isIll then
+                match predicate with
+                | True -> isIll <- true
+                | False -> isIll <- false
+                | Random ->
+                    let random = System.Random()
+                    
+                    isIll <- random.Next() % 2 = 0 
+        
+type IInfectNet =
+    abstract RunStep: unit -> unit
     
-    member val Id = id with get
-    
-    member this.TryInfect() = if not this.IsIll then isIll <- predicate ()
-                        
-type InfectNet(adjacencyMatrix: bool [,], nodes: Node []) =   
+    abstract GetState: unit -> (Id * bool) array 
+                
+type InfectNet(adjacencyMatrix: bool [,], nodes: INode []) =   
     do
         // validate
         if Array2D.length1 adjacencyMatrix <> Array2D.length2 adjacencyMatrix
@@ -39,18 +64,19 @@ type InfectNet(adjacencyMatrix: bool [,], nodes: Node []) =
         (adjacencyMatrix, nodes)
         ||> Array2D.mapByRow (fun isConnected node -> if isConnected then Some node else None)   
         |> Array.map (Array.choose id) 
-        |> Array.map2 (fun node neighbors -> node, neighbors) nodes 
+        |> Array.map2 (fun node neighbors -> node, neighbors) nodes
         
-    member this.RunStep() =
-        table
-        // extract neighbors of ill nodes
-        |> Array.filter (fst >> fun node -> node.IsIll)
-        |> Array.map snd
-        |> Array.concat
-        // try infect them
-        |> Array.iter (fun node -> node.TryInfect())
-        
-    member this.GetState() =
-        nodes |> Array.map (fun node -> node.Id, node.IsIll)
+    interface IInfectNet with 
+        member this.RunStep() =
+            table
+            // extract neighbors of ill nodes
+            |> Array.filter (fst >> fun node -> node.IsIll)
+            |> Array.map snd
+            |> Array.concat
+            // try infect them
+            |> Array.iter (fun node -> node.TryInfect())
+            
+        member this.GetState() =
+            nodes |> Array.map (fun node -> node.Id, node.IsIll)
         
         

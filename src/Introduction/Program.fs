@@ -2,18 +2,36 @@
 
 open Introduction.Net
 
-
-type ParseResult = Success of OS | Error of string
+module InfectNet =
+    let ill = "ill"
     
-let map = function
-    | "linux" -> Success Linux
-    | "windows" -> Success Windows
-    | "osX" -> Success OsX
-    | string -> Error string
+    let notIll = "not ill"
     
-[<EntryPoint>]
-let main args =
+    let maxIterations = 10000
     
-    let 
-
-    
+    let run nodes adjacencyMatrix =
+        let net = InfectNet(adjacencyMatrix, nodes)
+        
+        let rec helper count (net: IInfectNet) =
+            if count < maxIterations then
+                let existsNotIllNodes =
+                    net.GetState()
+                    |> Array.exists (not << snd)
+                    
+                if existsNotIllNodes then
+                    // print result
+                    net.GetState()
+                    |> Array.map (fun (id, isIll) -> $"node {id} is {if isIll then ill else notIll}")
+                    |> String.concat "\n"
+                    |> printfn "%s"
+                    
+                    net.RunStep()
+                    helper (count + 1)  net
+                
+                else
+                    printfn "All nodes are infected"
+                    
+            else
+                printfn "Too much work, it's time for computers to rest"
+                
+        helper 0 net 
