@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Round.fs" />
+    <Compile Include="Calculate.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
