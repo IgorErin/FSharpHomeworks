@@ -8,6 +8,7 @@
     <ItemGroup>
         <Compile Include="Helpers.fs" />
         <Compile Include="SuperMap.fs" />
+        <Compile Include="Romb.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>

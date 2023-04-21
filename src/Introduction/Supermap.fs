@@ -1,4 +1,4 @@
 module Introduction.Super
-    let map list superFun =
-        List.map superFun list 
-        |> List.concat
+
+let map list superFun =
+    List.map superFun list |> List.concat
