@@ -11,9 +11,9 @@ module Numbers =
     /// </summary>
     /// <param name="n"></param>
     let isPrime n =
-        List.forall (fun listItem -> n % listItem <> 0) [ 2 .. intSqrt n ]
+        Seq.forall (fun listItem -> n % listItem <> 0) [ 2 .. intSqrt n ]
 
     /// <summary>
     /// All primary numbers in form of seq.
     /// </summary>
-    let primary = Seq.initInfinite id |> Seq.filter isPrime
+    let primary = Seq.initInfinite ((+) 2) |> Seq.filter isPrime
