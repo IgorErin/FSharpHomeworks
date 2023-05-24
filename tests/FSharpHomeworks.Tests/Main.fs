@@ -1,3 +1,4 @@
+open System.Threading
 open Expecto
 open FSharpHomeworks.Tests
 

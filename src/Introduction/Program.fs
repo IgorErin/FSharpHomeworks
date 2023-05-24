@@ -28,51 +28,32 @@ module Lock =
         [<VolatileField>]
         let mutable result = None
 
-        interface ILazy<'a> with
-            member this.Get() =
-                // first check
+        let lockCheckAndCompute () =
+            lock locker
+            <| (fun () ->
                 Option.defaultWith
                     (fun () ->
-                        // lock
-                        lock locker
-                        <| (fun () ->
-                            // second check
-                            Option.defaultWith
-                                (fun () ->
-                                    // computation
-                                    let localResult = action ()
-
-                                    result <- Some localResult
-                                    localResult
-                                )
-                                result
-                        )
+                        result <- Some <| action ()
+                        result.Value
                     )
                     result
+            )
+
+        interface ILazy<'a> with
+            member this.Get() =
+                Option.defaultWith lockCheckAndCompute result
 
 module LockFree =
     type Lazy<'a>(action) =
-        [<VolatileField>]
         let mutable result = None
 
         interface ILazy<'a> with
             member this.Get() =
                 Option.defaultWith
                     (fun () ->
-                        let localResult = action ()
-
-                        Interlocked.CompareExchange(&result, Some localResult, result)
+                        Interlocked.CompareExchange(&result, Some <| action (), result)
                         |> ignore
 
                         result.Value
                     )
                     result
-
-[<EntryPoint>]
-let main args =
-
-    let lz = LockFree.Lazy(fun _ -> 1) :> ILazy<_>
-
-    lz.Get() |> printfn "%A"
-
-    0

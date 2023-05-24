@@ -1,6 +1,7 @@
 module FSharpHomeworks.Tests.Lazy
 
 open System.Threading
+open System.Threading.Tasks
 open Expecto
 open Introduction
 
@@ -27,7 +28,6 @@ let replicateRunAndWait (event: ManualResetEvent) count (lz: ILazy<_>) =
     |> fun task ->
         event.Set() |> ignore
         task.Result
-    |> Seq.distinct
 
 // Test that all computations return the same result
 let createEventTest count (lazyConstructor: (unit -> _) -> ILazy<_>) name =
@@ -42,18 +42,21 @@ let createEventTest count (lazyConstructor: (unit -> _) -> ILazy<_>) name =
         let lz = lazyConstructor action
 
         replicateRunAndWait event count lz
-        |> Seq.length
-        |> fun length -> Expect.equal length 1 "The results should be equal."
+        |> Seq.pairwise
+        |> Seq.map obj.ReferenceEquals
+        |> Seq.reduce (&&)
+        |> fun isEqual -> Expect.isTrue isEqual "The results should be equal."
     }
 
 let lockTest =
-    [ let createLockLazy = fun action -> Lock.Lazy(action) :> ILazy<_>
+    [ for iteration in 1..10000 do
+          let createLockLazy = fun action -> Lock.Lazy(action) :> ILazy<_>
 
-      createEventTest 10 createLockLazy "lock"
+          yield createEventTest 10 createLockLazy $"lock %i{iteration}"
 
-      let createLockFreeLazy = fun action -> Lock.Lazy(action) :> ILazy<_>
+          let createLockFreeLazy = fun action -> Lock.Lazy(action) :> ILazy<_>
 
-      createEventTest 10 createLockFreeLazy "lockFree" ]
+          yield createEventTest 10 createLockFreeLazy $"lockFree %i{iteration}" ]
     |> testList "same result"
 
 let sideEffectTest =
