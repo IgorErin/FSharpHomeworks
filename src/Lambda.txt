@@ -1,5 +1,7 @@
 \documentclass{article}
 
+%%  ((λa.(λb.b b) (λb.b b)) b) ((λc.(c b)) (λa.a)) $$
+
 \begin{document}
 \section{Normalization}
 
@@ -12,6 +14,6 @@
 
 \section{S \ K \ K = I}
 
-\large $$ \lambda x . (S \ K \ K) \ x  \rightarrow_\beta \lambda x. (K \ x \ (K \ x)) \rightarrow_\beta \lambda x . x $$
+\large $$ \lambda x . (S \ K \ K) \ x \rightarrow_\beta \lambda x . S \ K \ K \ x \rightarrow_\beta \lambda x. K \ x \ (K \ x) \rightarrow_\beta \lambda x . x $$
 
 \end{document}
