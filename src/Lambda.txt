@@ -7,13 +7,14 @@
 
    \large$$ ((\lambda a. (\lambda b.b \ b) \ (\lambda b.b \ b) \ b) ((\lambda c.(c \ b)) (\lambda a.a)) $$ 
 
-   \large $$((\lambda a.(\lambda  b.b\ b)\ (\lambda b.b\ b))\ b)\ ((\lambda c.(c\ b))\ (\lambda a.a)) \rightarrow_\beta
-((\lambda a.(\lambda  b.b\ b)\ (\lambda b.b\ b))\ b)\ ((\lambda a.a)\ b)
-\rightarrow_\beta$$ $$((\lambda a.(\lambda  b.b\ b)\ (\lambda b.b\ b))\ b)\ b \rightarrow_\beta
+   \large $$((\lambda a.(\lambda  b.b\ b)\ (\lambda b.b\ b))\ b)\ ((\lambda c.(c\ b))\ (\lambda a.a)) \rightarrow_\beta ((\lambda a.(\lambda  b.b\ b)\ (\lambda b.b\ b))\ b)\ ((\lambda a.a)\ b)
+\rightarrow_\beta$$ $$((\lambda a.(\lambda  b.b\ b) \ (\lambda b.b\ b))\ b)\ b \rightarrow_\beta
 ((\lambda  b.b\ b)\ (\lambda b.b\ b))\ b$$
 
 \section{S \ K \ K = I}
 
-\large $$ \lambda x . (S \ K \ K) \ x \rightarrow_\beta \lambda x . S \ K \ K \ x \rightarrow_\beta \lambda x. K \ x \ (K \ x) \rightarrow_\beta \lambda x . x $$
+$$ S \ K \ K \ x = (\lambda f \ s \ a.f \ a \ (s \ a)) (\lambda x \ y.x) (\lambda x \ y.x) \ x \rightarrow_\beta $$ 
+$$ (\lambda \ a. (\lambda x \ y.x) \ a \ ((\lambda x \ y.x) \ a)) x \rightarrow_\beta (\lambda x \ y.x) \ x \ ((\lambda x \ y.x) \ x) \rightarrow_\beta x $$ 
+
 
 \end{document}
