@@ -51,7 +51,7 @@ module LockFree =
             member this.Get() =
                 Option.defaultWith
                     (fun () ->
-                        Interlocked.CompareExchange(&result, Some <| action (), result)
+                        Interlocked.CompareExchange(&result, Some <| action (), None)
                         |> ignore
 
                         result.Value
