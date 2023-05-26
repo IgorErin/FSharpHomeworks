@@ -7,6 +7,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Helpers.fs" />
+        <Compile Include="Crawler.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
