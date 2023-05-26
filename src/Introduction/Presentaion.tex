@@ -1,0 +1,345 @@
+\documentclass{beamer}
+%Для защит онлайн лучше использовать разрешение 16x9
+%\documentclass[aspectratio=169]{beamer}
+
+\usepackage{beamerthemesplit}
+\usepackage{wrapfig}
+\usetheme{SPbGU}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{multirow}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usetikzlibrary{shapes,arrows}
+\usepackage{fancyvrb}
+\usepackage{appendixnumberbeamer}
+\usepackage{minted}
+
+
+
+\beamertemplatenavigationsymbolsempty
+
+% То, что в квадратных скобках, отображается внизу по центру каждого слайда. 
+\title[Hopac]{Hopac}
+
+% То, что в квадратных скобках, отображается в левом нижнем углу. 
+\institute[СПбГУ]{}
+
+% То, что в квадратных скобках, отображается в левом нижнем углу.
+\author[Ерин Игорь]{Ерин Игорь Антонович, 21.Б10}
+
+\begin{document}
+{
+    \setbeamertemplate{footline}{}
+% Лого университета или организации, отображается в шапке титульного листа
+    \begin{frame}
+        \vspace{-35pt}
+        \hspace{-10pt}
+        \begin{center}
+            \titlepage
+        \end{center}
+
+        \btVFill
+
+        \begin{center}
+            \vspace{5pt}
+            \scriptsize{Санкт-Петербург\\
+            2022}
+        \end{center}
+
+    \end{frame}
+}
+
+    \begin{frame}[fragile]
+        \frametitle{Писать параллельные программы сложно}
+        \begin{itemize}
+            \item Трудно воспроизводимые ошибки
+            \begin{itemize}
+                \item Deadlocks
+                \item Race conditions
+            \end{itemize}
+            \item Работа с низкоуровневыми сущностями
+            \begin{itemize}
+                \item Потоки
+                \item Примитивы синхронизации
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Concurrent ML}
+        \begin{itemize}
+            \item Concurrent ML
+            \begin{itemize}
+                \item Hopac
+                \item Racket
+                \item Clojure
+                \item Go
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+
+    \begin{frame} [fragile]
+
+        \begin{itemize} \frametitle{Основные сущности}
+        \item Потоки (Job)
+        \item Каналы (Ch)
+        \begin{itemize}
+            \item First-class
+            \item Higher-orde
+            \item Selective
+            \item Synchronous
+            \item Lightweight
+        \end{itemize}
+        \item Альтернаантивы (Alt)
+        \end{itemize}
+
+    \end{frame}
+
+
+% Обязательный слайд: четкая формулировка цели данной работы и постановка задачи
+% Описание выносимых на защиту результатов, процесса или особенностей их достижения и т.д.
+    \begin{frame}[fragile]
+        \frametitle{Hello world}
+        \begin{minted}{fsharp}
+let helloWorldJob = job {
+  printfn "Hello, World!"
+}
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Updatable storage cell interface}
+        \begin{minted}{fsharp}
+type Cell<'a>
+val cell: 'a -> Job<Cell<'a>>
+val get: Cell<'a> -> Job<'a>
+val put: Cell<'a> -> 'a -> Job<unit>
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Updatable storage cell request}
+        \begin{minted}{fsharp}
+type Request<'a> =
+ | Get
+ | Put of 'a
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Updatable storage cell}
+        \begin{minted}{fsharp}
+type Cell<'a> = {
+  reqCh: Ch<Request<'a>>
+  replyCh: Ch<'a>
+}
+
+let put (c: Cell<'a>) (x: 'a) : Job<unit> = job {
+  return! Ch.give c.reqCh (Put x)
+}
+
+let get (c: Cell<'a>) : Job<'a> = job {
+  do! Ch.give c.reqCh Get
+  return! Ch.take c.replyCh
+}
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Cell constructor}
+        \begin{minted}{fsharp}
+let cell (x: 'a) : Job<Cell<'a>> = job {
+  let c = {reqCh = Ch (); replyCh = Ch ()}
+  let rec server x = job {
+        let! req = Ch.take c.reqCh
+        match req with
+         | Get ->
+           do! Ch.give c.replyCh x
+           return! server x
+         | Put x ->
+           return! server x
+      }
+  do! Job.start (server x)
+  return c
+}
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Cell example}
+        \begin{minted}{fsharp}
+> let c = run (cell 1) ;;
+val c : Cell<int> = ...
+> run (get c) ;;
+val it : int = 1
+> run (put c 2) ;;
+val it : unit = ()
+> run (get c) ;;
+val it : int = 2
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Garbage Collection}
+        \begin{minted}{fsharp}
+> GC.GetTotalMemory true ;;
+val it : int64 = 39784152L
+> let cs = ref (List.init 100000 <| fun i -> run (cell i)) ;;
+// ...
+> GC.GetTotalMemory true ;;
+val it : int64 = 66296336L
+> cs := [] ;;
+val it : unit = ()
+> GC.GetTotalMemory true ;;
+val it : int64 = 39950064L
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Combinators}
+        \begin{minted}{fsharp}
+let put (c: Cell<'a>) (x: 'a) : Job<unit> =
+  Ch.give c.reqCh (Put x)
+
+let get (c: Cell<'a>) : Job<'a> = 
+  Ch.give c.reqCh Get >>=. Ch.take c.replyCh
+
+let create (x: 'a) : Job<Cell<'a>> = Job.delay <| fun () ->
+  let c = {reqCh = Ch (); replyCh = Ch ()}
+  let rec server x =
+    Ch.take c.reqCh >>= function
+     | Get ->
+       Ch.give c.replyCh x >>=. server x
+     | Put x -> server x       
+  Job.start (server x) >>-. c
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Combinators}
+        \begin{minted}{fsharp}
+let put c x = c.reqCh *<- Put x
+
+let get c = c.reqCh *<- Get >>=. c.replyCh
+
+let create x = Job.delay <| fun () ->
+  let c = {reqCh = Ch (); replyCh = Ch ()}
+  Job.iterateServer x <| fun x ->
+        c.reqCh >>= function
+          | Get -> c.replyCh *<- x >>-. x
+          | Put x -> Job.result x
+  >>-. c
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Updatable storage cell interface}
+        \begin{minted}{fsharp}
+type Cell<'a>
+val cell: 'a -> Job<Cell<'a>>
+val get: Cell<'a> -> Job<'a>
+val put: Cell<'a> -> 'a -> Job<unit>
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Updatable storage cell}
+        \begin{minted}{fsharp}
+type Cell<'a> = {
+  getCh: Ch<'a>
+  putCh: Ch<'a>
+}
+
+let get (c: Cell<'a>) : Job<'a> = Ch.take c.getCh
+
+let put (c: Cell<'a>) (x: 'a) : Job<unit> = Ch.give c.putCh x
+        \end{minted}
+    \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \begin{frame}[fragile]
+        \frametitle{Selective communication}
+        \begin{minted}{fsharp}
+type Cell<'a> = {
+  getCh: Ch<'a>
+  putCh: Ch<'a>
+}
+        
+let cell x = Job.delay <| fun () ->
+  let c = { getCh = Ch (); putCh = Ch () }
+  
+  let rec server x =
+    Alt.choose [ Ch.take c.putCh   ^=> fun x -> server x
+                 Ch.give c.getCh x ^=> fun () -> server x ]
+  Job.start (server x) >>-. c
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Combinators}
+        \begin{minted}{fsharp}
+type Cell<'a> = {
+  getCh: Ch<'a>
+  putCh: Ch<'a>
+}
+        
+let cell x = Job.delay <| fun () ->
+  let c = { getCh = Ch (); putCh = Ch () }
+  
+  Job.server << Job.iterate x <| fun x ->
+        Alt.choose [ Ch.take c.putCh
+                     Ch.give c.getCh x ^->. x ]
+  >>-. c
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Naive fibonacci}
+        \begin{minted}{fsharp}
+let (<&>) xJ yJ = 
+  xJ >>= fun x -> yJ >>= fun y -> result (x, y)
+  
+let (>>-) xJ x2y =
+  xJ >>= fun x -> result (x2y x)
+
+let rec fib n = Job.delay <| fun () ->
+  if n < 2L then
+    Job.result n
+  else
+    fib (n-2L) <&> fib (n-1L) >>- fun (x, y) ->
+    x + y
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Parallel fibonacci}
+        \begin{minted}{fsharp}
+let rec fib n = Job.delay <| fun () ->
+  if n < 2L then
+    Job.result n
+  else
+    fib (n-2L) <*> fib (n-1L) >>- fun (x, y) ->
+    x + y
+        \end{minted}
+    \end{frame}
+    \begin{frame}[fragile]
+        \frametitle{Deadlock}
+        \begin{minted}{fsharp}
+let notSafe = Job.delay <| fun () ->
+  let c = Ch ()
+  Ch.take c <*> Ch.give c ()
+        \end{minted}
+    \end{frame}
+
+\end{document}
